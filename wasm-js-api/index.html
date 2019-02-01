@@ -5,7 +5,7 @@
     <title>Simple template</title>
     <script>
 	var importObject = {
-	  imports: { imported_func: arg => console.log(arg) }
+	  imports: { imported_func: arg => console.log(arg+3) }
 	};
 	WebAssembly.instantiateStreaming(fetch('simple.wasm'), importObject)
 	.then(obj => obj.instance.exports.exported_func());

@@ -1,0 +1,13 @@
+<html>
+<head>
+<meta charset="utf-8"/>
+<script>
+(async () => {
+  const fetchPromise = fetch('hello.wasm');
+  const {instance} = await WebAssembly.instantiateStreaming(fetchPromise);
+  const result = instance.exports.fib();
+  console.log(result);
+})();
+</script>
+</head>
+</html>

@@ -1,0 +1,2 @@
+emcc hello.c -Os -s WASM=1 -o hello.wasm
+

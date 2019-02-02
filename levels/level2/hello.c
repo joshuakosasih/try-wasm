@@ -2,6 +2,6 @@
 
 EMSCRIPTEN_KEEPALIVE
 int fib() {
-  return 42+1;
+  return 42+2;
 }
 

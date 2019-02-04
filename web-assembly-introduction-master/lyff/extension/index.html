@@ -31,6 +31,12 @@
 
     draw();
 
+    canvas.onclick = (ev) => {
+      var boardBuffer = getBoardBuffer();
+      var clickPos = getCursorPosition(canvas, ev);
+      boardBuffer[clickPos] = 255;
+    };
+
     updateAndDraw();    
   }
   init();
@@ -38,6 +44,16 @@
   function getBoardBuffer() {
     return new Uint8Array(memory.buffer, exports._board_ref());
   }
+
+  function getCursorPosition(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    var x = Math.floor((event.clientX - rect.left)/5);
+    var y = Math.ceil((event.clientY - rect.top)/5);
+    var pos = Math.round(((y-1)*102 + (x-1)) / 8);
+    console.log("pos: "+pos);
+    return pos;
+  }
+
   function draw() {
     const buffer = getBoardBuffer();
     const dim = 100;  // nb. fixed size
@@ -88,5 +104,7 @@
 <input id="slider" type="range" min="10" max="100" value="72" onchange="changeSpeed()">
 <br />
 <input id="speedometer" type="number" value="955" readonly>
+<br />
+<p>Click on the canvas to add a cell</p>
 </body>
 </html>

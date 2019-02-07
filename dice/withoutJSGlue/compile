@@ -1,1 +1,1 @@
-emcc dice-roll.c -Os -s WASM=1 -s SIDE_MODULE=1 -o dice.wasm
+emcc dice-roll.c -Os -s WASM=1 -s -o dice.wasm

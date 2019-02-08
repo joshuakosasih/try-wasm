@@ -11,6 +11,8 @@
   }
   const memory = new WebAssembly.Memory({initial: 256, maximum: 256});
   let exports = null;
+  let exp_speed = 955;
+  var time_out;
 
   async function init() {
     const env = {
@@ -35,7 +37,7 @@
       var boardBuffer = getBoardBuffer();
       var clickPos = getCursorPosition(canvas, ev);
       boardBuffer[clickPos] = 255;
-    };
+    };    
 
     updateAndDraw();    
   }
@@ -80,20 +82,26 @@
   }
   function updateAndDraw() {
   	var slider = document.getElementById("slider");
-  	var interval = setInterval (function(){
-		exports._board_step();
-		draw();
-    }, 955);
+  	// var interval = setInterval (function(){
+		 //  exports._board_step();
+		 //  draw();
+   //  }, 955);
     slider.onchange = function() {    	
 	    var speed = slider.value;
-	    var exp_speed = 1.1**speed;
+	    exp_speed = Math.round(1.1**speed);
 	    document.getElementById("speedometer").value = exp_speed;
-	    clearInterval(interval);
-	    interval = setInterval (function(){
-			exports._board_step();
-			draw();
-	    }, exp_speed);
+      clearTimeout(time_out);
+      requestAnimationFrame(animate);
     }
+    requestAnimationFrame(animate);
+  }
+
+  function animate(timestamp){
+    time_out = setTimeout(function(){
+      exports._board_step();
+      draw();
+      requestAnimationFrame(animate);
+    }, exp_speed);
   }
 </script>
 </head>
@@ -101,8 +109,10 @@
 
 <canvas id="canvas" style="image-rendering: pixelated; border: 2px solid blue;"></canvas>
 <br />
+<p>Set timeout of animation using slider below</p>
 <input id="slider" type="range" min="10" max="100" value="72" onchange="changeSpeed()">
 <br />
+<p>Timeout (ms)</p>
 <input id="speedometer" type="number" value="955" readonly>
 <br />
 <p>Click on the canvas to add a cell</p>

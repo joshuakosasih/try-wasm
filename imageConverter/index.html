@@ -33,7 +33,7 @@
 			const blobURL = URL.createObjectURL(blob);
 			const img = document.createElement('img');
 			img.src = blobURL;
-			document.body.appendChild(img);
+			document.getElementById('conHolder').appendChild(img);
 
 			api.destroy_buffer(p);
 			console.log('hey');
@@ -50,13 +50,15 @@
     <input id="File" type="file" />
     <input id="Button" type="button" value="Process" />
 
-    <table>
+    <table style="width: 100%">
     	<tr>
-    		<td>
-    			Original
+    		<th width="50%">Original</th>
+    		<th width="50%">Converted</th>
+    	</tr>
+    	<tr>
+    		<td id="oriHolder">    			
     		</td>
-    		<td>
-    			Converted
+    		<td id="conHolder">
     		</td>
     	</tr>
     </table>
@@ -92,6 +94,13 @@
         var button = document.getElementById('Button');
         var container = document.getElementById('container');
         button.onclick = function () {
+        	var originalImgHolder = document.getElementById('oriHolder');
+        	var convertedImgHolder = document.getElementById('conHolder');
+        	console.log('has child', originalImgHolder.hasChildNodes());
+        	if (originalImgHolder.firstChild) {
+	        	originalImgHolder.removeChild(originalImgHolder.firstChild);
+	        	convertedImgHolder.removeChild(convertedImgHolder.firstChild);        		
+        	}
             var reader = new FileReader();
             reader.onload = function () {
                 var bytes = new Uint8Array(reader.result);
@@ -99,6 +108,9 @@
                 const image = document.createElement('img');
 		        
 		        image.src = 'data:image/png;base64,'+encode(bytes);
+
+		        // waits the image to load
+		        while (image.width == 0);
 
 				const canvas = document.createElement('canvas');
 				canvas.width = image.width;
@@ -108,10 +120,9 @@
 
 				var img = ctx.getImageData(0, 0, image.width, image.height);
 
-				document.body.appendChild(image);
+				document.getElementById('oriHolder').appendChild(image);
 
 				convertImage(img);
-
             }
             input.files.length > 0 && reader.readAsArrayBuffer(input.files[0]);
         }

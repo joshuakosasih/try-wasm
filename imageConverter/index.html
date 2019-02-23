@@ -24,6 +24,7 @@
 			console.log(api.version());
 
 			const image = originalImg;
+			console.log('creating buffer');
 			const p = api.create_buffer(image.width, image.height);
 
 			Module.HEAP8.set(image.data, p);
@@ -93,10 +94,7 @@
 		    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
 		    var i = 0;
 
-		    while (i < input.length) {
-		    	if (i%1000 == 0) {
-		    		console.log(i);
-		    	}
+		    while (i < input.length) {		    	
 		        chr1 = input[i++];
 		        chr2 = i < input.length ? input[i++] : Number.NaN; // Not sure if the index 
 		        chr3 = i < input.length ? input[i++] : Number.NaN; // checks are needed here
@@ -114,7 +112,7 @@
 		        output += keyStr.charAt(enc1) + keyStr.charAt(enc2) +
 		                  keyStr.charAt(enc3) + keyStr.charAt(enc4);
 		    }
-		    console.log('encode function finished');
+		    console.log('encoding finished');
 		    return 'data:image/png;base64,' + output;
 		}
         var input = document.getElementById('File');
@@ -123,11 +121,12 @@
         button.onclick = function () {
         	var originalImgHolder = document.getElementById('oriHolder');
         	var convertedImgHolder = document.getElementById('conHolder');
-        	console.log('has child', originalImgHolder.hasChildNodes());
         	if (originalImgHolder.firstChild) {
 	        	originalImgHolder.removeChild(originalImgHolder.firstChild);
-	        	convertedImgHolder.removeChild(convertedImgHolder.firstChild);        		
         	}
+        	if (convertedImgHolder.firstChild) {        	
+	        	convertedImgHolder.removeChild(convertedImgHolder.firstChild);
+	        }
             var reader = new FileReader();
             reader.onload = async function () {
                 var bytes = new Uint8Array(reader.result);
@@ -144,9 +143,8 @@
 				canvas.width = image.width;
 				canvas.height = image.height;
 		        const ctx = canvas.getContext('2d');
-		        console.log('drawing image');
 				ctx.drawImage(image, 0, 0);
-				console.log('drawn');
+				console.log('original image drawn');
 
 				var img = ctx.getImageData(0, 0, image.width, image.height);
 
